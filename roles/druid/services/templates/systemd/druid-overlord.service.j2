@@ -1,0 +1,15 @@
+[Unit]
+Description=Druid overlord
+
+[Service]
+User={{ druid_user }}
+Group={{ druid_user }}
+Environment=DRUID_CONF_DIR={{ druid_conf_dir }}
+Environment=DRUID_LOG_DIR={{ druid_log_dir }}
+Environment=DRUID_PID_DIR={{ druid_pid_dir }}
+
+ExecStart={{ druid_current_dir }}/bin/overlord.sh start
+
+[Install]
+WantedBy=multi-user.target
+

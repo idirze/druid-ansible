@@ -1,0 +1,34 @@
+---
+
+- name: "Create druid install dir {{ druid_install_dir }}"
+  file:
+    path: "{{ druid_install_dir }}"
+    state: directory
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+
+- name: Download druid
+  get_url: 
+    url: "{{ druid_repo }}/{{ druid_version }}/{{ druid_package }}"  
+    dest: /tmp/ 
+    force: true
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+  register: _download_archive
+  until: _download_archive is succeeded
+  retries: 5
+  delay: 2
+      
+- name: unarchive druid
+  unarchive: 
+    src: "/tmp/{{ druid_package }}" 
+    dest: "{{ druid_install_dir }}"
+    copy: no
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+
+
+

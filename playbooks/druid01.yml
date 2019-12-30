@@ -1,0 +1,78 @@
+---
+
+- hosts: all
+  vars_files:
+  - "../group_vars/all.yml"
+  - "../group_vars/druid-master.yml"
+  - "../group_vars/druid-data.yml"
+  - "../group_vars/druid-query.yml"
+  roles:
+    - jdk
+    - druid/common
+
+- hosts: postgresql
+  vars_files:
+  - "../group_vars/all.yml"
+  roles:
+    - postgresql
+
+- hosts: zookeeper
+  vars_files:
+  - "../group_vars/all.yml"
+  roles:
+    - zookeeper
+ 
+- hosts: overlord
+  vars_files:
+  - "../group_vars/all.yml"
+  - "../group_vars/druid-master.yml"
+  - "../group_vars/druid-data.yml"
+  - "../group_vars/druid-query.yml"
+  roles:
+    - { role: "druid/services", vars: [ services : ["overlord"] ] }
+
+- hosts: coordinator
+  vars_files:
+  - "../group_vars/all.yml"
+  - "../group_vars/druid-master.yml"
+  - "../group_vars/druid-data.yml"
+  - "../group_vars/druid-query.yml"
+  roles:
+    - { role: "druid/services", vars: [ services : ["coordinator"] ] }
+
+- hosts: historicals
+  vars_files:
+  - "../group_vars/all.yml"
+  - "../group_vars/druid-master.yml"
+  - "../group_vars/druid-data.yml"
+  - "../group_vars/druid-query.yml"
+  roles:
+     - { role: "druid/services", vars: [ services : ["historical"] ] }
+
+- hosts: middlemanagers
+  vars_files:
+  - "../group_vars/all.yml"
+  - "../group_vars/druid-master.yml"
+  - "../group_vars/druid-data.yml"
+  - "../group_vars/druid-query.yml"
+  roles:
+    - { role: "druid/services", vars: [ services : ["middlemanager"] ] }
+    
+- hosts: brokers
+  vars_files:
+  - "../group_vars/all.yml"
+  - "../group_vars/druid-master.yml"
+  - "../group_vars/druid-data.yml"
+  - "../group_vars/druid-query.yml"
+  roles:
+    - { role: "druid/services", vars: [ services : ["broker"] ] }
+
+- hosts: routers
+  vars_files:
+  - "../group_vars/all.yml"
+  - "../group_vars/druid-master.yml"
+  - "../group_vars/druid-data.yml"
+  - "../group_vars/druid-query.yml"
+  roles:
+     - { role: "druid/services", vars: [ services : ["router"] ] }
+

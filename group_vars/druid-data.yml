@@ -1,0 +1,77 @@
+---
+
+druid:
+  data:
+    historical:
+      jvm: |
+        -server
+        -Xms2g
+        -Xmx2g
+        -XX:MaxDirectMemorySize=13g
+        -XX:+ExitOnOutOfMemoryError
+        -Duser.timezone=UTC
+        -Dfile.encoding=UTF-8
+        -Djava.io.tmpdir={{ druid_tmpdir }}
+        -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+
+      properties: |
+        druid.service=druid/historical
+        druid.plaintextPort=8083
+
+        # HTTP server threads
+        druid.server.http.numThreads=60
+
+        # Processing threads and buffers
+        #druid.processing.buffer.sizeBytes=500000000
+        druid.processing.buffer.sizeBytes=50000000
+        druid.processing.numMergeBuffers=4
+        druid.processing.numThreads=15
+        druid.processing.tmpDir={{ druid_processing_tmpDir }}
+
+        # Segment storage
+        druid.segmentCache.locations=[{"path":"{{ druid_cache_location }}","maxSize":300000000000}]
+        #druid.server.maxSize=300000000000
+        druid.server.maxSize=3000
+
+        # Query cache
+        druid.historical.cache.useCache=true
+        druid.historical.cache.populateCache=true
+        druid.cache.type=caffeine
+        #druid.cache.sizeInBytes=256000000
+        druid.cache.sizeInBytes=25600000
+
+
+    middleManager:
+      jvm: |
+        -server
+        -Xms128m
+        -Xmx128m
+        -XX:+ExitOnOutOfMemoryError
+        -Duser.timezone=UTC
+        -Dfile.encoding=UTF-8
+        -Djava.io.tmpdir={{ druid_tmpdir }}
+        -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+
+      properties: |
+        druid.service=druid/middleManager
+        druid.plaintextPort=8091
+
+        # Number of tasks per middleManager
+        druid.worker.capacity=4
+
+        # Task launch parameters
+        druid.indexer.runner.javaOpts=-server -Xms1g -Xmx1g -XX:MaxDirectMemorySize=1g -Duser.timezone=UTC -Dfile.encoding=UTF-8 -XX:+ExitOnOutOfMemoryError -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+        druid.indexer.task.baseTaskDir={{ druid_baseTaskDir }}
+
+        # HTTP server threads
+        druid.server.http.numThreads=60
+
+        # Processing threads and buffers on Peons
+        druid.indexer.fork.property.druid.processing.numMergeBuffers=2
+        druid.indexer.fork.property.druid.processing.buffer.sizeBytes=100000000
+        druid.indexer.fork.property.druid.processing.numThreads=1
+
+        # Hadoop indexing
+        druid.indexer.task.hadoopWorkingPath={{ druid_hadoopWorkingPath }}
+
+  

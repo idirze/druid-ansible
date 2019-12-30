@@ -1,0 +1,21 @@
+---
+
+- include: user.yml
+  become: true
+  tags:
+  - druid_install
+
+- include: install.yml
+  become: true
+  tags:
+  - druid_install
+
+- include: configure-common.yml
+  become: true
+  tags:
+  - druid_install
+
+
+
+
+  

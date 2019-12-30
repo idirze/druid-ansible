@@ -1,0 +1,11 @@
+---
+
+- include: configure-services.yml
+  become: true
+  tags:
+  - druid_install_services
+
+- include: systemd.yml
+  become: true
+  tags:
+  - druid_install_services

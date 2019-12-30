@@ -1,0 +1,46 @@
+---
+
+- include: set-facts.yml
+  become: true
+  tags:
+  - druid_install_services  
+
+- name: "Create symlink conf dir {{ druid_conf_dir }} for {{ services }}"
+  file:
+    src: "{{ druid_current_dir }}/conf/druid/cluster/{{ item.type }}/{{ item.name }}"
+    dest: "{{ druid_conf_dir }}/{{ item.name }}"
+    state: link
+    force: yes
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+  with_items:
+  - "{{ _services }}"
+
+- name: "Copy runtime.properties in {{ druid_conf_dir }} for services {{ services }}"
+  copy:
+    content: "{{ lookup('vars', 'druid')[item.type][item.name]['properties'] }}"
+    dest: "{{ druid_conf_dir }}/{{ item.name }}/runtime.properties"
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+  with_items:
+  - "{{ _services }}"
+
+- name: "Copy jvm.config in {{ druid_conf_dir }}"
+  copy:
+    content: "{{ lookup('vars', 'druid')[item.type][item.name]['jvm'] }}"
+    dest: "{{ druid_conf_dir }}/{{ item.name }}/jvm.config"
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+  with_items:
+  - "{{ _services }}"
+
+- include: systemd.yml
+  become: true
+  tags:
+  - druid_install
+
+
+

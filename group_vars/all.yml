@@ -1,0 +1,32 @@
+druid_repo: http://mirrors.ircam.fr/pub/apache/incubator/druid
+zookeeper_repo: http://miroir.univ-lorraine.fr/apache/zookeeper
+
+#druid_repo: http://192.168.43.94:8089/repository/raw-public/druid
+#zookeeper_repo: http://192.168.43.94:8089/repository/raw-public/zookeeper
+
+druid_version: 0.16.1-incubating
+druid_package: "apache-druid-{{ druid_version }}-bin.tar.gz"
+druid_package_name: "{{ druid_package | regex_replace('-bin.tar.gz', '') }}"
+druid_install_dir: /opt/druid
+druid_current_dir: /opt/druid/current
+
+druid_conf_dir: /etc/druid/conf
+druid_log_dir: /var/log/druid
+druid_pid_dir: /var/run/druid
+
+druid_cache_location: /data/druid/segment-cache
+druid_tmpdir: /data/druid/tmp
+druid_hadoopWorkingPath: /data/druid/hadoop-tmp
+druid_baseTaskDir: /data/druid/task
+druid_processing_tmpDir: /data/druid/processing
+
+druid_user: druid
+druid_group: druid
+
+# Database setting
+db_name: druid
+db_uri: "jdbc:postgresql://{{ hostvars[groups['postgresql'][0]].ansible_host }}:5432/{{ db_name }}"
+#db_uri: "jdbc:derby://localhost:1527/var/druid/metadata.db;create=true"
+db_druid_user: druid
+db_druid_password: druid
+

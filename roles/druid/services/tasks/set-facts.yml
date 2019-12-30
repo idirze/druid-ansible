@@ -1,0 +1,20 @@
+---
+
+- set_fact:
+    _services: []
+    _druid_services:
+      - { name: historical,    type: data   }
+      - { name: middleManager, type: data   }
+      - { name: coordinator,   type: master }
+      - { name: overlord,      type: master }
+      - { name: broker,        type: query  }
+      - { name: router,        type: query  }
+
+- set_fact:
+    _services: "{{ _services + (_druid_services | selectattr('name','equalto', item) | list) }}"
+  with_items:
+  - "{{ services }}"
+
+
+
+

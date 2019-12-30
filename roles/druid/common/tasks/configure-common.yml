@@ -1,0 +1,96 @@
+---
+
+- name: "Create symlink current install dir for druid {{ druid_current_dir }}"
+  file:
+    src: "{{ druid_install_dir }}/{{ druid_package_name }}"
+    dest: "{{ druid_current_dir }}"
+    state: link
+    force: yes
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+
+- name: "Create conf dir {{ druid_conf_dir }}"
+  file:
+    path: "{{ druid_conf_dir }}"
+    state: directory
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+
+- name: "Create symlink conf dir for druid {{ druid_conf_dir }}"
+  file:
+    src: "{{ druid_current_dir }}/conf"
+    dest: "{{ druid_conf_dir }}/conf"
+    state: link
+    force: yes
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+
+- name: "Create symlink common conf dir for druid {{ druid_conf_dir }}"
+  file:
+    src: "{{ druid_current_dir }}/conf/druid/cluster/_common"
+    dest: "{{ druid_conf_dir }}/_common"
+    state: link
+    force: yes
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+
+- name: "Copy common properties in {{ druid_conf_dir }}/_common "
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ druid_conf_dir }}/_common/{{ item }}"
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+  with_items:
+  - common.runtime.properties
+  - log4j2.xml
+
+- name: "Copy startup scripts to {{ druid_current_dir }}/bin/"
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ druid_current_dir }}/bin/{{ item }}"
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+  with_items:
+  - router.sh
+  - node.sh
+
+- name: "Create coordinator and overlord conf dirs"
+  file:
+    path: "{{ druid_install_dir }}/{{ druid_package_name }}/conf/druid/cluster/master/{{ item }}"
+    state: directory
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+  with_items:
+  - coordinator
+  - overlord
+
+- name: "Create working directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    mode: 0755
+  with_items:
+  - "{{ druid_log_dir }}"
+  - "{{ druid_pid_dir }}"
+  - "{{ druid_cache_location }}"
+  - "{{ druid_tmpdir }}"
+  - "{{ druid_hadoopWorkingPath }}"
+  - "{{ druid_baseTaskDir }}"
+  - "{{ druid_processing_tmpDir }}"
+
+
+
+
+
+
+
+

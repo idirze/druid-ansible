@@ -1,0 +1,17 @@
+---
+
+- name: "Create druid group {{ druid_group }}"
+  group:
+    name: "{{ druid_group }}"
+    system: true
+    state: present
+
+- name: "Create druid user {{ druid_user }}"
+  user:
+    name: "{{ druid_user }}"
+    group: "{{ druid_group }}"
+    createhome: false
+    shell: /sbin/nologin
+    system: true
+    state: present
+

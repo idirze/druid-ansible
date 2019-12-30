@@ -1,0 +1,9 @@
+---
+- name: "Restart druid services"
+  service:
+    name: "druid-{{ item.name }}"
+    state: "restarted"
+    enabled: yes
+  with_items:
+  - "{{ _services }}"
+

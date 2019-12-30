@@ -1,0 +1,69 @@
+---
+
+druid:
+  query:
+    router:
+      jvm: |
+        -server
+        -Xms1g
+        -Xmx1g
+        -XX:+UseG1GC
+        -XX:MaxDirectMemorySize=128m
+        -XX:+ExitOnOutOfMemoryError
+        -Duser.timezone=UTC
+        -Dfile.encoding=UTF-8
+        -Djava.io.tmpdir={{ druid_tmpdir }}
+        -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+
+      properties: |
+        druid.service=druid/router
+        druid.plaintextPort=8888
+
+        # HTTP proxy
+        druid.router.http.numConnections=50
+        druid.router.http.readTimeout=PT5M
+        druid.router.http.numMaxThreads=100
+        druid.server.http.numThreads=100
+
+        # Service discovery
+        druid.router.defaultBrokerServiceName=druid/broker
+        druid.router.coordinatorServiceName=druid/coordinator
+
+        # Management proxy to coordinator / overlord: required for unified web console.
+        druid.router.managementProxy.enabled=true
+
+    broker:
+      jvm: |
+        -server
+        -Xms2g
+        -Xmx2g
+        -XX:MaxDirectMemorySize=6g
+        -XX:+ExitOnOutOfMemoryError
+        -Duser.timezone=UTC
+        -Dfile.encoding=UTF-8
+        -Djava.io.tmpdir={{ druid_tmpdir }}
+        -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+
+      properties: |
+        druid.service=druid/broker
+        druid.plaintextPort=8082
+
+        # HTTP server settings
+        druid.server.http.numThreads=60
+
+        # HTTP client settings
+        druid.broker.http.numConnections=50
+        #druid.broker.http.maxQueuedBytes=10000000
+        druid.broker.http.maxQueuedBytes=1000000
+
+        # Processing threads and buffers
+        #druid.processing.buffer.sizeBytes=500000000
+        druid.processing.buffer.sizeBytes=50000000
+        druid.processing.numMergeBuffers=6
+        druid.processing.numThreads=1
+        druid.processing.tmpDir={{ druid_processing_tmpDir }}
+
+        # Query cache disabled -- push down caching and merging instead
+        druid.broker.cache.useCache=true
+        druid.broker.cache.populateCache=true
+
