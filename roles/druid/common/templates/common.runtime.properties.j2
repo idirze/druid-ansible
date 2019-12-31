@@ -35,7 +35,7 @@ druid.extensions.loadList=["druid-hdfs-storage", "druid-kafka-indexing-service",
 #
 # Hostname
 #
-druid.host={{ inventory_hostname }}
+druid.host={{ hostvars[inventory_hostname].ansible_host }}
 
 #
 # Logging
@@ -54,7 +54,7 @@ druid.startup.logging.logProperties=true
 {% endfor %}
 
 druid.zk.service.host={{ zk_hosts | join (',') }}
-druid.zk.paths.base=/druid
+druid.zk.paths.base={{ druid_zk_paths_base }}
 
 #
 # Metadata storage
@@ -124,6 +124,7 @@ druid.indexer.logs.directory=var/druid/indexing-logs
 
 druid.selectors.indexing.serviceName=druid/overlord
 druid.selectors.coordinator.serviceName=druid/coordinator
+druid.discovery.curator.path: {{ druid_zk_paths_base }}/discovery
 
 #
 # Monitoring
@@ -153,4 +154,3 @@ druid.sql.enable=true
 # Lookups
 #
 druid.lookup.enableLookupSyncOnStartup=false
-

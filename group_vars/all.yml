@@ -30,3 +30,6 @@ db_uri: "jdbc:postgresql://{{ hostvars[groups['postgresql'][0]].ansible_host }}:
 db_druid_user: druid
 db_druid_password: druid
 
+# Zookeeper
+druid_zk_paths_base: /druid-unsecure
+

@@ -55,4 +55,3 @@ druid:
 
         druid.indexer.runner.type=remote
         druid.indexer.storage.type=metadata
-

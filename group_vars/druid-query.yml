@@ -66,4 +66,3 @@ druid:
         # Query cache disabled -- push down caching and merging instead
         druid.broker.cache.useCache=true
         druid.broker.cache.populateCache=true
-
